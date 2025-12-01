@@ -19,7 +19,6 @@ public class Main {
             System.out.print("\nPlease enter the last name of an actor: ");
             String lastNameToSearch = scanner.nextLine();
 
-
             try (BasicDataSource dataSource = new BasicDataSource()) {
                 dataSource.setUrl("jdbc:mysql://localhost:3306/sakila");
                 dataSource.setUsername(username);
@@ -77,18 +76,22 @@ public class Main {
             preparedStatement.setString(1, firstNameForMovie);
             preparedStatement.setString(2, lastNameForMovie);
             try (ResultSet results = preparedStatement.executeQuery()) {
-                while (results.next()) {
-                    String movieTitle = results.getString("title");
+                if (results.next()) {
+                    System.out.println("Movies with that actor: ");
+                    do {
+                        String movieTitle = results.getString("title");
 
-                    System.out.println(movieTitle);
-                    System.out.println("-----------------------------------------");
+                        System.out.println(movieTitle);
+                        System.out.println("-----------------------------------------");
+                    } while (results.next());
+                } else {
+                    System.out.println("\nNo matches!");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 }
 
 
